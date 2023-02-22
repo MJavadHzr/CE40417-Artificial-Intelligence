@@ -1,0 +1,125 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{temp}
+\usepackage{epsfig,graphicx,subfigure,amsthm,amsmath, float, xcolor, changepage, mathtools, textcomp, hyperref, bm, amssymb, tcolorbox, tikz, setspace}
+\usepackage{array}
+\usepackage[shortlabels]{enumitem}
+\usepackage[stable]{footmisc}
+\usepackage{xepersian}
+\settextfont[Scale=1]{XBZar}
+%\setdigitfont{XBZar}
+\setlatintextfont[Scale=0.9]{Times New Roman}
+\hypersetup{
+	colorlinks=true,
+	urlcolor=blue!70!black
+}
+\definecolor{darkpastelgreen}{rgb}{0.01, 0.75, 0.24}
+
+\doublespacing
+\begin{document}
+\handout
+{هوش مصنوعی}
+{نیم‌سال اول ۰۱\lr{-}۰۰}
+{دکتر محمدحسین رهبان}
+{دانشکده مهندسی کامپیوتر}
+{تمرین هفتم - بخش دوم}
+{محمدجواد هزاره}
+{98101074}
+\noindent
+\\[-6.5em]
+\section{سوال ۱}
+\begin{enumerate}[A)]
+	\item
+	استفاده از 
+	\lr{Q-Value}ها
+	مناسب‌تر خواهد بود. با دانستن 
+	\lr{Q-Value}ها
+	بهبود دادن سیاست داده شده بدون نیاز به دانستن 
+	$T$
+	و
+	$R$
+	شدنی‌ خواهد بود. چرا که اگر $\pi$ سیاست داده شده باشد، داریم:
+	\[
+	\hat{\pi}(s) = \argmax_a Q^{\pi}(s, a)
+	\]
+	بنابراین برای سنجش یک سیاست بهتر است از
+	\lr{Q-Value}
+	استفاده کنیم.
+	\item
+	استفاده از \lr{policy iteration} باعث می‌شود نتوانیم کل فضا را \lr{explore} کنیم. در این روش با استفاده از یک \lr{policy} اولیه شروع به سنجش آن و آپدیت آن می‌کنیم و این باعث می‌شود اگر \lr{policy} اولیه به یک سو گرایش داشته باشد، الگوریتم بهترین سیاستی را پیدا کند که به بهترین ارزش‌های آن سو بگراید. در حالی که ممکن است در گوشه‌ی دیگری از فضای حالت، حالت‌های با پاداش بهتر وجود داشته باشد که با استفاده از این روش عامل هرگز به آن حالت‌ها نخواهد رفت. به عبارتی دیگر عامل گمان می‌کند که به بهترین سیاست با دریافت بهترین پاداش رسیده در حالی که اصلا تمام حالات مسئله را بررسی نکرده است. برای رفع این مشکل، از روش
+	$\epsilon\text{\lr{-greedy}}$
+	استفاده می‌شود که با انجام حرکت‌های تصادفی با احتمال $\epsilon$، به عامل این امکان را می‌دهد که در بعضی از مواقع به حالت‌های جدید رفته و بتواند تمام فضای حالت مسئله را کشف کند و به بهترین پاداش ممکن دست یابد.
+	\item
+	می‌خواهیم اثبات کنیم که اگر از $s$ شروع کرده و سیاست $\pi^\prime$ را دنبال کنیم، امیدریاضی مطلوبیت یا همان
+	$V^{\pi^\prime}(s)$،
+	 بیش‌تر از حالتی خواهد شد که سیاست $\pi$ را دنبال کنیم. برای اثبات، از استقرا استفاده می‌کنیم. تعریف می‌کنیم:
+	\[
+	V_n(s):=
+	\left(\begin{gathered}
+		\text{
+		امیدریاضی مطلوبیت، اگر از $s$ شروع کرده و $n$ قدم اول را از سیاست $\pi^\prime$
+		} \\
+		\text{
+		و در ادامه از سیاست $\pi$ پیروی کنیم.
+		}
+	\end{gathered}\right)
+	\]
+	\textbf{پایه}:
+	پایه‌ی استقرا برای $V_1$ همان فرضی است که در سوال داده شده. می‌دانیم:
+	\[
+	V_1 = \E_{a\sim \pi^\prime}[Q^\pi(s, a)] \ge \E_{a\sim \pi}[Q^\pi(s,a)] = V^\pi(s)
+	\]
+	\textbf{گام استقرا}:
+	فرض کنید بدانیم $V_n$ خواسته‌ی مسئله را برآورده می‌کند یا به عبارتی
+	$V_n(s) \ge V^\pi(s)$.
+	اثبات می‌کنیم 
+	$V_{n+1}(s)$
+	نیز حداقل به اندازه‌ی $V^\pi(s)$ است. برای این منظور، اگر از $s$ شروع کرده و با دنبال کردن $\pi^\prime$ برای $n$ قدم، به ترتیب پاداش‌های $R_1$ تا $R_n$ را دریافت کرده و حالت‌های $s_1$ تا $s_n$ را دیده باشیم، (مشخصا $R_i$ها و $s_i$ها متغیرهایی تصادفی هستند که از توزیع $T$ و $R$ و فرض این‌که از سیاست $\pi^\prime$ استفاده کرده‌ایم پیروی می‌کنند) آن‌گاه برای $V_n$ داریم:
+	\[
+	V_n(s) = \E_{\pi^\prime}\left[R_1 + \gamma R_2 + \cdots + \gamma^{n-1}R_{n} + \gamma^n Q^\pi(s_n, \pi(s_{n}))\right] \ge V^\pi(s) \qquad (1)
+	\]
+	هم‌چنین برای $V_{n+1}$ نیز داریم:
+	\[
+	V_{n+1}(s) = \E_{\pi^\prime}\left[R_1 + \gamma R_2 + \cdots + \gamma^{n-1}R_n + \gamma^n \E_{a\sim \pi^\prime}[Q^\pi(s_n, a)]\right] \qquad (2)
+	\]
+	از طرفی چون سیاست‌های $\pi$ در روش
+	$\epsilon\text{\lr{-greedy}}$
+	خود سیاست‌هایی تصادفی هستند، دایم:
+	\[
+	Q^\pi(s, \pi(s)) = \E_{a\sim\pi}[Q^\pi(s, a)] \qquad (\ast)
+	\]
+	هم‌چنین با توجه به فرض مسئله، داریم:
+	\[
+	\begin{gathered}
+		\forall s: E_{a\sim\pi^\prime}[Q^\pi(s, a)] \ge E_{a\sim\pi}[Q^\pi(s,a)] \\[0.4em]
+		\implies E_{a\sim\pi^\prime}[Q^\pi(s_n, a)] \ge E_{a\sim\pi}[Q^\pi(s_n, a)] \qquad (\ast\ast)
+	\end{gathered}
+	\]
+	در نتیجه با جایگذاری رابطه‌ی
+	$(\ast)$
+	در 
+	$(1)$
+	و استفاده از
+	$(\ast\ast)$
+	در مقایسه‌ی روابط
+	$(1)$
+	و
+	$(2)$
+	به راحتی می‌توان نتیجه گرفت که:
+	$V_{n+1}(s) \ge V_n(s) \ge V^\pi(s)$.
+	\\[3em]
+	بنابراین مراحل استقرا تکمیل شده و حکم اثبات می‌شود. از آن‌جایی که به ازای هر $n$ داریم
+	$V_n(s) \ge V^\pi(s)$،
+	اگر تمام قدم‌ها را نیز از $\pi^\prime$ پیروی کنیم باز هم نابرابری برقرار و 
+	$V^{\pi^\prime}(s) \ge V^\pi(s)$
+	خواهد بود.
+	\vfill
+	\hrulefill
+	
+	\begin{center}
+		\lr{The END!}
+	\end{center}
+\end{enumerate}
+\end{document}
+
+
+

@@ -1,0 +1,66 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{temp}
+\usepackage{epsfig,graphicx,subfigure,amsthm,amsmath, float, xcolor, changepage, mathtools, textcomp, hyperref, bm, amssymb, tcolorbox, tikz, setspace}
+\usepackage{array}
+\usepackage[shortlabels]{enumitem}
+\usepackage[stable]{footmisc}
+\usepackage{xepersian}
+\settextfont[Scale=1]{XBZar}
+%\setdigitfont{XBZar}
+\setlatintextfont[Scale=0.9]{Times New Roman}
+\hypersetup{
+	colorlinks=true,
+	urlcolor=blue!70!black
+}
+
+\newcolumntype{?}{!{\vrule width 1pt}}
+\newcommand*\rfrac[2]{{}^{#1}\!/_{#2}}
+
+\doublespacing
+\begin{document}
+\handout
+{هوش مصنوعی}
+{نیم‌سال اول ۰۱\lr{-}۰۰}
+{دکتر محمدحسین رهبان}
+{دانشکده مهندسی کامپیوتر}
+{تمرین ششم - بخش اول}
+{محمدجواد هزاره}
+{98101074}
+\noindent
+\\[-6em]
+\section*{سوال ۱}
+\begin{enumerate}[A)]
+	\item
+	برای مشتقات جزئی داریم:
+	\[
+	\begin{aligned}
+		\frac{\partial f}{\partial w_j} &= \frac{\partial}{\partial w_j} \left(\sum_i (\hat{y}^i-y^i)^2\right) \\[0.5em]
+		&= \sum_i \frac{\partial}{\partial w_j} (\hat{y}^i - y^i)^2\\[0.5em]
+		&= \sum_i 2(\hat{y}^i - y^i) \frac{\partial}{\partial w_j} \hat{y}^i \\[0.5em]
+		&= \sum_i 2(\hat{y}^i - y^i) (x^{(i)})^j
+	\end{aligned}
+	\]
+	بنابراین گرادیان $f$ به صورت زیر خواهد بود:
+	\[
+	\nabla f = \left(\begin{array}{c}
+		2\sum_i \epsilon_i \\
+		2\sum_i \epsilon_i \, x^{(i)} \\
+		2\sum_i \epsilon_i \, (x^{(i)})^2
+	\end{array}\right), \quad \epsilon_i = \hat{y}^i - y^i
+	\]
+	\item
+	اگر داشته باشیم
+	$\bm{w} = (w_2, w_1, w_0)^T$،
+	آن‌گاه برای \lr{Gradient Descent} داریم:
+	\[
+	\bm{w}^{t+1} = \bm{w}^t - \alpha \nabla f
+	\]
+	با کم کردن $\alpha$ سرعت همگرا شدن $\bm{w}$ کاهش پیدا می‌کند. با زیاد کردن $\alpha$ نیز تا یک حدی، سرعت همگرا شدن زیاد می‌شود اما از این حد به بعد، به کلی همگرایی را از دست می‌دهیم و 
+	$\bm{w}^t$
+	واگرا می‌شود.
+\end{enumerate}
+	
+\end{document}
+
+
+

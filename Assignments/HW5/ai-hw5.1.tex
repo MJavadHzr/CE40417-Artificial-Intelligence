@@ -1,0 +1,90 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{temp}
+\usepackage{epsfig,graphicx,subfigure,amsthm,amsmath, float, xcolor, changepage, mathtools, textcomp, hyperref, bm, amssymb, tcolorbox, tikz, setspace}
+\usepackage{array}
+\usepackage[shortlabels]{enumitem}
+\usepackage[stable]{footmisc}
+\usepackage{xepersian}
+\settextfont[Scale=1]{XBZar}
+%\setdigitfont{XBZar}
+\setlatintextfont[Scale=0.9]{Times New Roman}
+\hypersetup{
+	colorlinks=true,
+	urlcolor=blue!70!black
+}
+
+\newcolumntype{?}{!{\vrule width 1pt}}
+
+\doublespacing
+\begin{document}
+\handout
+{هوش مصنوعی}
+{نیم‌سال اول ۰۱\lr{-}۰۰}
+{دکتر محمدحسین رهبان}
+{دانشکده مهندسی کامپیوتر}
+{تمرین پنجم - بخش اول}
+{محمدجواد هزاره}
+{98101074}
+\noindent
+\\[-6em]
+\section*{سوال ۱}
+برای تعریف \lr{HMM} نیاز به توزیع احتمال حالات اولیه،
+\lr{Transitions}
+و
+\lr{Emissions}
+داریم. با توجه به این‌که هر حالت $k$ مقدار مختلف می‌تواند بگیرد، با مشخص کردن $k-1$ احتمال برای مقادیر می‌توان توزیع احتمال اولیه را شناخت. برای مشخص شدن \lr{Transitions} باید 
+$\prob\{S_t\,|\,S_{t-1}\}$
+را مشخص کنیم که برای یک مقدار مشخص برای $S_{t-1}$، باید $k-1$ احتمال برای مقادیر $S_t$ را مشخص کنیم؛ بنابراین در مجموع برای مشخص کردن \lr{Transitions} به
+$k(k-1)$
+پارامتر نیاز داریم. برای مشخص کردن \lr{Emissions} نیز باید 
+$\prob\{O\,|\,S\}$
+را مشخص کنیم که برای یک مقدار مشخص از $S$، به $m-1$ احتمال برای مقادیر مختلف $O$ نیاز داریم. بنابراین در مجموع برای \lr{Emissions} نیز 
+$k(m-1)$
+پارامتر نیاز داریم. پس در کل به
+$\boxed{k^2 + km - k + 1}$
+پارامتر نیاز خواهیم داشت.
+\begin{enumerate}[A)]
+	\item
+	برای محاسبه‌ی احتمال خواسته شده به صورت زیر عمل می‌کنیم:
+	\[
+	\prob({\scriptstyle O_1=0, O_2=1, O_3=0}) = \prob({\scriptstyle S_3=A, O_1=0, O_2=1, O_3=0}) + \prob({\scriptstyle S_3=B, O_1=0, O_2=1, O_3=0}) \quad (\ast)
+	\]
+	برای حساب کردن احتمال‌های جدید نیز می‌توان از روش \lr{forward} استفاده کرد. داریم:
+	\[
+	\prob({\scriptstyle S_3=A, O_1=0, O_2=1, O_3=0}) = \prob({\scriptstyle O_3=0\,|\,S_3=A})\sum_{s}\prob({\scriptstyle S_3=A\,|\,S_2=s})\prob({\scriptstyle S_2=s, O_1=0, O_2=1}) \quad (\star)
+	\]
+	برای محاسبه‌ی عبارت داخل پرانتز نیز خواهیم داشت:
+	\[
+	\begin{dcases}
+		\prob({\scriptstyle S_2=A, O_1=0, O_2=1}) &= \prob({\scriptstyle O_2=1\,|\,S_2=A})\sum_s\prob({\scriptstyle S_2=A\,|\,S_1=s})\prob({\scriptstyle S_1=s, O_1=0}) \\&= 0.2\big(0.99\times0.8\times0.99 + 0.01\times0.1\times0.01\big) \approx 0.157\\
+		\prob({\scriptstyle S_2=B, O_1=0, O_2=1}) &= \prob({\scriptstyle O_2=1\,|\,S_2=B})\sum_s\prob({\scriptstyle S_2=B\,|\,S_1=s})\prob({\scriptstyle S_1=s, O_1=0}) \\&= 0.9\big(0.01\times0.8\times0.99+0.99\times0.1\times0.01\big) \approx  0.008\\
+	\end{dcases}
+	\]
+	بنابراین برای $(\star)$ خواهیم داشت:
+	\[
+	\begin{aligned}
+		\prob({\scriptstyle S_3=A, O_1=0, O_2=1, O_3=0}) &= \prob({\scriptstyle O_3=0\,|\,S_3=A})\sum_{s}\prob({\scriptstyle S_3=A\,|\,S_2=s})\prob({\scriptstyle S_2=s, O_1=0, O_2=1}) \\
+		&= 0.8\big(0.99\times0.157 + 0.01\times 0.008\big) \\
+		&\approx 0.124
+	\end{aligned}
+	\]
+	به طور مشابه داریم:
+	\[
+	\begin{aligned}
+		\prob({\scriptstyle S_3=B, O_1=0, O_2=1, O_3=0}) &= \prob({\scriptstyle O_3=0\,|\,S_3=B})\sum_{s}\prob({\scriptstyle S_3=B\,|\,S_2=s})\prob({\scriptstyle S_2=s, O_1=0, O_2=1}) \\
+		&=0.1\big(0.1\times0.157 + 0.99\times0.008\big) \\
+		&\approx 0.002
+	\end{aligned}
+	\]
+	بنابراین برای $(\ast)$ خواهیم داشت:
+	\[
+	\prob({\scriptstyle O_1=0, O_2=1, O_3=0}) \approx 0.126\quad :)
+	\]
+	\item
+	
+	\item
+\end{enumerate}
+\end{document}
+
+
+

@@ -1,0 +1,107 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{temp}
+\usepackage{epsfig,graphicx,subfigure,amsthm,amsmath, float, xcolor, changepage, mathtools, textcomp, hyperref, bm, amssymb, tcolorbox, tikz, setspace}
+\usepackage{array}
+\usepackage[shortlabels]{enumitem}
+\usepackage[stable]{footmisc}
+\usepackage{xepersian}
+\settextfont[Scale=1]{XBZar}
+%\setdigitfont{XBZar}
+\setlatintextfont[Scale=0.9]{Times New Roman}
+\hypersetup{
+	colorlinks=true,
+	urlcolor=blue!70!black
+}
+
+\newcolumntype{?}{!{\vrule width 1pt}}
+\newcommand*\rfrac[2]{{}^{#1}\!/_{#2}}
+
+\doublespacing
+\begin{document}
+\handout
+{هوش مصنوعی}
+{نیم‌سال اول ۰۱\lr{-}۰۰}
+{دکتر محمدحسین رهبان}
+{دانشکده مهندسی کامپیوتر}
+{تمرین پنجم - بخش دوم}
+{محمدجواد هزاره}
+{98101074}
+\noindent
+\\[-6em]
+\section*{سوال ۱}
+\begin{enumerate}[A)]
+	\item
+	با این روش اطلاعات پیشین خود از پارامترها را به تخمین اضافه می‌کنیم. به این صورت که تعدادی داده‌ی مصنوعی به نمونه اضافه می‌کنیم که از توزیع پیشین مورد نظر ما تبعیت می‌کنند و سپس با داده‌های جدید و این داده‌ها تخمین را انجام می‌دهیم. با این کار به نحوی از بیش‌برازش (\lr{overfitting}) می‌توان جلوگیری کرد.
+	\item
+	جداول \lr{CPT} به صورت زیر خواهد بود.
+	\begin{table}[H]
+	\centering
+	\begin{latin}
+	\begin{tabular}{|c|c|}
+		\hline
+		$Y$ & $\prob(Y)$ \\
+		\hline
+		\lr{Stop} & $\scriptstyle \frac{4}{9}$ \\
+		\hline
+		\lr{Go} & $\scriptstyle \frac{5}{9}$ \\
+		\hline
+	\end{tabular}
+	\hspace*{2em}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		$X_i$ & $Y$ & $\prob(X_1|Y)$ & $\prob(X_2|Y)$ & $\prob(X_3|Y)$ & $\prob(X_4|Y)$ \\
+		\hline
+		0 & \lr{Stop} & $\scriptstyle \frac{1}{4}$ & $\scriptstyle \frac{1}{4}$ & $\scriptstyle 1$ & $\scriptstyle \frac{1}{4}$ \\
+		\hline
+		1 & \lr{Stop} & $\scriptstyle \frac{3}{4}$ & $\scriptstyle \frac{3}{4}$ & $\scriptstyle 0$ & $\scriptstyle \frac{3}{4}$ \\
+		\hline
+		0 & \lr{Go} & $\scriptstyle 1$ & $\scriptstyle \frac{2}{5}$ & $\scriptstyle 0$ & $\scriptstyle \frac{3}{5}$ \\
+		\hline
+		1 & \lr{Go} & $\scriptstyle 0$ & $\scriptstyle \frac{3}{5}$ & $\scriptstyle 1$ & $\scriptstyle \frac{2}{5}$ \\
+		\hline
+	\end{tabular}
+	\end{latin}
+	\end{table}
+بنابراین چون احتمال صفر داریم بهتر است از
+\lr{Laplace Smoothing}
+استفاده کنیم. با توجه به تعداد داده‌های مشاهده شده، از این روش با $k = 2$ استفاده می‌کنیم. بنابراین جدول‌ها به صورت زیر خواهند شد.
+\begin{table}[H]
+	\centering
+	\begin{latin}
+		\begin{tabular}{|c|c|}
+			\hline
+			$Y$ & $\prob(Y)$ \\
+			\hline
+			\lr{Stop} & $\scriptstyle \frac{4}{9}$ \\
+			\hline
+			\lr{Go} & $\scriptstyle \frac{5}{9}$ \\
+			\hline
+		\end{tabular}
+		\hspace*{2em}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\hline
+			$X_i$ & $Y$ & $\prob(X_1|Y)$ & $\prob(X_2|Y)$ & $\prob(X_3|Y)$ & $\prob(X_4|Y)$ \\
+			\hline
+			0 & \lr{Stop} & $\scriptstyle \frac{3}{8}$ & $\scriptstyle \frac{3}{8}$ & $\scriptstyle \frac{6}{8}$ & $\scriptstyle \frac{3}{8}$ \\
+			\hline
+			1 & \lr{Stop} & $\scriptstyle \frac{5}{8}$ & $\scriptstyle \frac{5}{8}$ & $\scriptstyle \frac{2}{8}$ & $\scriptstyle \frac{5}{8}$ \\
+			\hline
+			0 & \lr{Go} & $\scriptstyle \frac{7}{9}$ & $\scriptstyle \frac{4}{9}$ & $\scriptstyle \frac{2}{9}$ & $\scriptstyle \frac{5}{9}$ \\
+			\hline
+			1 & \lr{Go} & $\scriptstyle \frac{2}{9}$ & $\scriptstyle \frac{5}{9}$ & $\scriptstyle \frac{7}{9}$ & $\scriptstyle \frac{4}{9}$ \\
+			\hline
+		\end{tabular}
+	\end{latin}
+\end{table}
+حال برای احتمال برچسب داده‌ی جدید داریم:
+\[
+\begin{dcases}
+	\prob(\text{\lr{Stop}}\,|\,1,1,1,0) = \frac{4}{9} \times \frac{5}{8} \times \frac{5}{8} \times \frac{2}{8} \times \frac{3}{8} \approx 0.016 \\[0.5em]	\prob(\text{\lr{Go}}\,|\,1,1,1,0) = \frac{5}{9} \times \frac{2}{9} \times \frac{5}{9} \times \frac{7}{9} \times \frac{5}{9} \approx 0.030
+\end{dcases}
+\]
+بنابراین برچسب \lr{Go} به این داده تخصیص خواهد یافت.
+\end{enumerate}
+\end{document}
+
+
+
